@@ -3,186 +3,216 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Spice & Grill Bistro</title>
+<title>Auric Table Hub</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <style>
-:root{--gold:#d9b25f;--gold2:#a8782a;--ink:#0e0b08;--card:#1a1510}
-body{font-family:Inter,system-ui,sans-serif;background:radial-gradient(900px 500px at 50% -100px,#2a2012,var(--ink));color:#f3ead8;min-height:100vh}
+:root{--gold:#d9b66a;--gold2:#f3e3b3;--ink:#0b0a09;--panel:#171513}
+html,body{background:radial-gradient(circle at 50% -10%,#2a241a 0,#0b0a09 55%) fixed;color:#efe8d8;font-family:Outfit,sans-serif;min-height:100%}
 .serif{font-family:'Cormorant Garamond',serif}
-.card{background:linear-gradient(160deg,#241c13,var(--card));border:1px solid rgba(217,178,95,.22);border-radius:18px;box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 10px 24px rgba(0,0,0,.5),0 2px 0 #000}
-.gbtn{background:linear-gradient(180deg,#f0d487,var(--gold) 50%,var(--gold2));color:#1b1307;font-weight:700;border-radius:12px;box-shadow:0 4px 0 #6d4b13,0 8px 16px rgba(0,0,0,.4);transition:transform .12s,box-shadow .12s}
-.gbtn:active{transform:translateY(3px);box-shadow:0 1px 0 #6d4b13}
-.obtn{border:1px solid rgba(217,178,95,.5);color:var(--gold);border-radius:12px;font-weight:600}
-.tab{white-space:nowrap;padding:8px 14px;border-radius:999px;border:1px solid rgba(217,178,95,.3);font-size:14px;color:#cdbf9f}
-.tab.on{background:var(--gold);color:#1b1307;font-weight:700}
-.thumb{width:84px;height:84px;border-radius:14px;object-fit:cover;background:#2c2216;flex:none;display:flex;align-items:center;justify-content:center;font-size:34px}
-.veg,.nv{width:16px;height:16px;border:2px solid;display:inline-flex;align-items:center;justify-content:center;border-radius:3px}
-.veg{border-color:#3fae5a}.veg:after,.nv:after{content:'';width:8px;height:8px;border-radius:50%;background:currentColor}
-.veg{color:#3fae5a}.nv{border-color:#d4483b;color:#d4483b}
-.codebox{font-size:clamp(44px,15vw,64px);font-weight:700;letter-spacing:.18em;background:#fff8e6;color:#111;border-radius:16px;padding:14px 8px 14px 22px;text-align:center;font-family:Inter,Arial,sans-serif}
-.codein{font-size:32px;text-align:center;letter-spacing:.3em;text-transform:uppercase;background:#120e09;border:2px solid var(--gold);border-radius:14px;padding:12px;width:100%;color:#fff;outline:none}
-.shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.pop{animation:pop .3s ease-out}@keyframes pop{from{transform:translateY(24px);opacity:0}}
-.step{flex:1;text-align:center;font-size:12px;padding:6px 2px;border-radius:8px;background:#2a2116;color:#8d7f66}
-.step.on{background:var(--gold);color:#1b1307;font-weight:700}
-@media(prefers-reduced-motion:reduce){*{animation:none!important}}
-button:focus-visible,input:focus-visible{outline:3px solid #fff}
+.gtext{background:linear-gradient(90deg,#b8923f,#f3e3b3,#b8923f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{background:linear-gradient(150deg,#1f1c18,#100f0d);border:1px solid rgba(217,182,106,.38);border-radius:18px;box-shadow:0 18px 32px -10px #000,0 2px 0 rgba(255,255,255,.05) inset,0 -3px 0 rgba(0,0,0,.5) inset}
+.btn{background:linear-gradient(180deg,#f3e3b3,#c49a45 60%,#a07a2c);color:#1a1307;font-weight:600;border-radius:12px;padding:.65rem 1.1rem;box-shadow:0 6px 0 #6b5018,0 12px 18px rgba(0,0,0,.5);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #6b5018}
+.btn:disabled{opacity:.4;pointer-events:none}
+.ghost{border:1px solid rgba(217,182,106,.5);color:var(--gold2);border-radius:12px;padding:.5rem .9rem}
+.ghost.on{background:rgba(217,182,106,.18)}
+.tile{background:linear-gradient(135deg,#3a2f1a,#14110c);border:1px solid rgba(217,182,106,.3)}
+.badge{border-radius:999px;padding:.1rem .65rem;font-size:.75rem;border:1px solid}
+.b-Received{color:#9ec5ff;border-color:#9ec5ff}.b-Preparing{color:#ffd37a;border-color:#ffd37a}.b-Ready{color:#8be3a4;border-color:#8be3a4}
+.key{height:64px;font-size:1.5rem;border-radius:14px}
+:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<div id="app" class="max-w-2xl mx-auto px-4 pb-32"></div>
-<div id="modal"></div>
+<div id="top"></div><div id="app" class="max-w-6xl mx-auto px-3 pb-24"></div><div id="modal"></div>
 <script>
-/* ===== Config ===== */
-const DB_URL='https://restaurant-orders-dba5b-default-rtdb.asia-southeast1.firebasedatabase.app';
-const PINS={kitchen:'5190',owner:'2486'};
-const IMG='images/'; // put photos as images/<n>.jpg (n = item number below); emoji shown if missing
-const CATS=['Starters & Snacks','Main Course','Rice & Biryani','Indian Breads','Beverages','Desserts'];
-// [cat, name, description, price, veg, emoji]
-const M=[
-[0,'Paneer Tikka','Clay-oven cottage cheese, mint chutney',280,1,'🧀'],
-[0,'Chicken Tikka','Smoky marinated chicken, charred in the tandoor',320,0,'🍗'],
-[0,'Crispy Chilli Baby Corn','Wok-tossed, sweet and spicy glaze',220,1,'🌽'],
-[0,'Spring Rolls','Crisp rolls with garden vegetables',180,1,'🥟'],
-[0,'Chicken Pakora','Gram-flour fried chicken, chaat masala',260,0,'🍤'],
-[1,'Butter Chicken','Tandoori chicken in creamy tomato gravy',380,0,'🍛'],
-[1,'Kadai Paneer','Paneer with peppers and roasted spices',320,1,'🍲'],
-[1,'Dal Makhani','Black lentils slow-cooked overnight',260,1,'🥘'],
-[1,'Chicken Curry','Home-style curry with whole spices',340,0,'🍛'],
-[1,'Mix Veg','Seasonal vegetables in onion-tomato masala',240,1,'🥗'],
-[2,'Chicken Dum Biryani','Sealed-pot basmati with tender chicken',360,0,'🍚'],
-[2,'Veg Biryani','Fragrant basmati with vegetables and saffron',280,1,'🍚'],
-[2,'Jeera Rice','Basmati tempered with cumin',160,1,'🍚'],
-[2,'Veg Fried Rice','Wok-fried rice with vegetables',200,1,'🍳'],
-[3,'Butter Naan','Soft tandoor bread brushed with butter',60,1,'🫓'],
-[3,'Garlic Naan','Naan topped with garlic and coriander',70,1,'🫓'],
-[3,'Tandoori Roti','Whole-wheat bread from the tandoor',30,1,'🫓'],
-[3,'Lachha Paratha','Flaky layered whole-wheat paratha',70,1,'🫓'],
-[4,'Masala Chai','Spiced milk tea',40,1,'🍵'],
-[4,'Cold Coffee','Chilled coffee with ice cream',120,1,'🧋'],
-[4,'Fresh Lime Soda','Sweet or salted',80,1,'🍋'],
-[4,'Mango Lassi','Thick yoghurt and mango',110,1,'🥭'],
-[4,'Mineral Water','1 litre bottle',30,1,'💧'],
-[5,'Gulab Jamun','Two warm milk dumplings in syrup',90,1,'🍮'],
-[5,'Brownie with Ice Cream','Warm brownie, vanilla scoop',160,1,'🍨'],
-[5,'Rasmalai','Soft cheese discs in saffron milk',120,1,'🍥']
-];
-const STAT=['confirmed','preparing','ready'],LBL={confirmed:'Order Confirmed',preparing:'Preparing',ready:'Ready'};
-
-/* ===== State ===== */
-const P=new URLSearchParams(location.search),V=P.get('view'),T=parseInt(P.get('table'));
-const $=id=>document.getElementById(id);
-let D={},cart={},sel={},cat=0,code='',conn='connecting',first=true,seen=new Set(),soundOn=true,AC=null,authed=false;
-try{authed=sessionStorage.getItem('auth_'+V)==='1'}catch(e){}
-
-/* ===== Sound ===== */
-function audio(){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume()}catch(e){}}
-function chime(force){if(!soundOn&&!force)return;audio();if(!AC)return;[880,1175,1480].forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+i*.16;o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.3,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.55);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.6)})}
-
-/* ===== Firebase ===== */
+const DB_URL="https://auric-table-hub-default-rtdb.asia-southeast1.firebasedatabase.app";
 firebase.initializeApp({databaseURL:DB_URL});
 const db=firebase.database();
-db.ref('.info/connected').on('value',s=>{conn=s.val()?'live':'offline';pill()});
-setTimeout(()=>{if(conn==='connecting'){conn='offline';pill()}},10000);
-db.ref('orders').on('value',s=>{
-  D=s.val()||{};
-  const ids=all().map(o=>o.id);
-  let isNew=false;ids.forEach(i=>{if(!seen.has(i)){seen.add(i);isNew=true}});
-  if(isNew&&!first&&(V==='kitchen'||V==='owner')&&authed)chime();
-  first=false;paint();
-},e=>{conn='error';pill()});
-function pill(){const e=$('pill');if(!e)return;
-  const m={connecting:['Connecting…','#d9b25f'],live:['Live','#3fae5a'],offline:['Offline. Orders will send when you reconnect.','#d4483b'],error:['Cannot read database. Check Firebase rules allow read/write.','#d4483b']}[conn];
-  e.textContent=m[0];e.style.color=m[1]}
+const MENU=[
+{id:1,cat:"Starters",name:"Saffron Paneer Tikka",desc:"Char-grilled cottage cheese, saffron marinade, mint chutney.",price:340,e:"🍢"},
+{id:2,cat:"Starters",name:"Crispy Calamari",desc:"Lightly battered rings with garlic aioli.",price:380,e:"🦑"},
+{id:3,cat:"Starters",name:"Wild Mushroom Soup",desc:"Velvety porcini cream with truffle oil.",price:260,e:"🍲"},
+{id:4,cat:"Main Course",name:"Butter Chicken",desc:"Tandoori chicken in a slow-cooked tomato and butter gravy.",price:460,e:"🍗"},
+{id:5,cat:"Main Course",name:"Royal Dal Makhani",desc:"Black lentils simmered overnight with cream.",price:320,e:"🥘"},
+{id:6,cat:"Main Course",name:"Grilled Salmon",desc:"Lemon butter glaze, sautéed greens, herb potatoes.",price:720,e:"🐟"},
+{id:7,cat:"Main Course",name:"Truffle Mushroom Pasta",desc:"Tagliatelle in a parmesan cream sauce.",price:520,e:"🍝"},
+{id:8,cat:"Breads & Rice",name:"Garlic Butter Naan",desc:"Tandoor-baked, brushed with garlic butter.",price:90,e:"🫓"},
+{id:9,cat:"Breads & Rice",name:"Hyderabadi Chicken Biryani",desc:"Aged basmati, slow-cooked with whole spices.",price:480,e:"🍛"},
+{id:10,cat:"Desserts",name:"Molten Chocolate Dome",desc:"Warm dark chocolate center, vanilla bean ice cream.",price:300,e:"🍫"},
+{id:11,cat:"Desserts",name:"Saffron Rasmalai",desc:"Soft cheese dumplings in chilled saffron milk.",price:240,e:"🍮"},
+{id:12,cat:"Beverages",name:"Signature Mango Lassi",desc:"Alphonso mango, thick yogurt, cardamom.",price:180,e:"🥭"},
+{id:13,cat:"Beverages",name:"Sparkling Citrus Cooler",desc:"Fresh lime, mint and chilled soda.",price:160,e:"🍹"},
+{id:14,cat:"Beverages",name:"Masala Chai",desc:"Assam tea brewed with ginger and cardamom.",price:120,e:"🍵"},
+{id:15,cat:"Beverages",name:"Signature Mocktail",desc:"Chilled signature drink crafted fresh to order",price:200,e:"🍸"}
+];
+const CATS=[...new Set(MENU.map(m=>m.cat))];
+const PINS={"1234":"owner","0987":"kitchen"};
+const S={view:"lock",table:1,demo:false,cart:{},orders:[],conn:false,sound:false,tab:"active",pin:"",cat:CATS[0],loaded:false,err:""};
+const $=id=>document.getElementById(id);
+const T=n=>"T-"+String(n).padStart(2,"0");
+const R=n=>"₹"+Number(n).toLocaleString("en-IN");
+const tm=t=>new Date(t).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+const items=o=>Array.isArray(o.items)?o.items:Object.values(o.items||{});
+const prog=o=>{const it=items(o),d=it.filter(i=>i.delivered).length;return d===it.length?"All Delivered":`${d}/${it.length} Delivered · ${it.length-d} Remaining`};
+const unpaid=n=>S.orders.filter(o=>!o.paid&&(n==null||o.table==n));
+const total=l=>l.reduce((s,o)=>s+(o.total||0),0);
+const fail=e=>alert("Action failed: "+(e&&e.message||e)+". Please check your connection and try again.");
 
-/* ===== Helpers ===== */
-const all=()=>Object.values(D).flatMap(t=>Object.values(t||{})).filter(o=>o&&o.id).sort((a,b)=>(a.ts||0)-(b.ts||0));
-const rs=n=>'₹'+n;
-const cartItems=()=>Object.entries(cart).map(([i,q])=>({n:M[i][1],q,p:M[i][3]}));
-const cartTotal=()=>cartItems().reduce((s,x)=>s+x.p*x.q,0);
-const cartCount=()=>Object.values(cart).reduce((s,q)=>s+q,0);
-function wait(o){const ahead=all().filter(x=>!x.paid&&x.status!=='ready'&&(x.ts||Infinity)<=(o.ts||Infinity)).reduce((s,x)=>s+(x.items||[]).reduce((a,i)=>a+i.q,0),0);
-  const m=Math.min(60,Math.round((8+ahead*1.5)/5)*5);return `About ${m}-${m+5} min (approximate)`}
-function head(sub){return `<header class="pt-6 pb-3 flex items-end justify-between"><div><h1 class="serif text-3xl font-bold" style="color:var(--gold)">Spice &amp; Grill Bistro</h1><div class="text-sm text-stone-400">${sub}</div></div><div id="pill" class="text-xs font-semibold text-right max-w-[45%]"></div></header>`}
+/* Audio */
+let AC=null;
+function unlock(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume()}catch(e){}}
+function chime(){if(!S.sound||!AC)return;[880,1318].forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+i*.18;o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.3,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+.6);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.65)})}
+function toggleSound(){S.sound=!S.sound;if(S.sound){unlock();chime()}render()}
 
-/* ===== Router ===== */
-function paint(){
-  if(V==='kitchen'||V==='owner'){if(!authed)return;staff();pill();return}
-  if(!$('ord'))return;ordersPanel();pill();
+/* Firebase listeners */
+let seen=new Set(),first=true,connTimer=setTimeout(()=>{if(!S.conn){S.err="Unable to reach the database. Retrying automatically…";render()}},8000);
+db.ref(".info/connected").on("value",s=>{S.conn=!!s.val();if(S.conn)S.err="";render()});
+db.ref("orders").on("value",snap=>{
+  const v=snap.val()||{};
+  S.orders=Object.entries(v).map(([id,o])=>({id,...o})).sort((a,b)=>(a.ts||Date.now())-(b.ts||Date.now()));
+  const fresh=S.orders.filter(o=>!seen.has(o.id));
+  fresh.forEach(o=>seen.add(o.id));
+  if(!first&&fresh.length&&S.view==="kitchen")chime();
+  first=false;S.loaded=true;S.err="";render();
+},e=>{S.err="Database access error: "+e.message;render()});
+
+/* Routing */
+const q=new URLSearchParams(location.search).get("table");
+if(q&&/^([1-9]|10)$/.test(q)){S.table=+q;S.view="menu";S.locked=true}
+
+function go(v){S.view=v;S.pin="";S.cartOpen=false;$("modal").innerHTML="";render()}
+function header(){
+  const st=S.conn?`<span class="text-emerald-400">● Connected</span>`:`<span class="text-amber-400">● Connecting…</span>`;
+  let right="";
+  if(S.view==="menu")right=`<button class="ghost text-sm" onclick="go('lock')">🔒 Staff Login</button>`;
+  if(S.view==="owner")right=`<button class="ghost text-sm" onclick="go('kitchen')">Kitchen View</button><button class="ghost text-sm" onclick="go('lock')">🔒 Lock</button>`;
+  if(S.view==="kitchen")right=`<button class="ghost text-sm ${S.sound?'on':''}" onclick="toggleSound()">${S.sound?"🔊 Sound: ON":"🔇 Mute"}</button><button class="ghost text-sm" onclick="go('lock')">🔒 Lock</button>`;
+  const sub={menu:"Digital Menu",owner:"Owner Counter",kitchen:"Kitchen Display",lock:"Staff Access"}[S.view];
+  return `<header class="flex flex-wrap items-center justify-between gap-2 py-4 sticky top-0 z-20" style="background:linear-gradient(#0b0a09 70%,transparent)">
+  <div><div class="serif gtext text-3xl font-bold leading-none">Auric Table Hub</div><div class="text-xs text-stone-400 mt-1">${sub} · ${st}</div></div>
+  <div class="flex gap-2 items-center">${right}</div></header>${S.err?`<div class="card p-3 mb-3 text-amber-300 text-sm">${S.err}</div>`:""}`;
 }
-function init(){
-  if(V==='kitchen'||V==='owner'){authed?staff():gate();pill();return}
-  if(!(T>=1&&T<=10)){$('app').innerHTML=head('Welcome')+`<div class="card p-5 mt-4"><p class="mb-3">Scan the QR code or tap the NFC tag on your table to open the menu.</p><div class="grid grid-cols-5 gap-2">${Array.from({length:10},(_,i)=>`<a class="obtn text-center py-2" href="?table=${i+1}">${i+1}</a>`).join('')}</div></div>`;pill();return}
-  $('app').innerHTML=head('Table '+String(T).padStart(2,'0'))+`<div id="ord"></div><div id="tabs" class="sticky top-0 z-20 -mx-4 px-4 py-3 flex gap-2 overflow-x-auto" style="background:rgba(14,11,8,.92);backdrop-filter:blur(8px)"></div><div id="menu" class="space-y-3 mt-2"></div><div id="bar"></div>`;
-  tabs();menu();bar();ordersPanel();pill();
+function render(){
+  const v=S.view;
+  $("app").innerHTML=header()+(v==="lock"?lockV():v==="menu"?menuV():v==="owner"?ownerV():kitchenV());
+  if(v==="menu")cartBar();
 }
 
-/* ===== Customer ===== */
-function tabs(){$('tabs').innerHTML=CATS.map((c,i)=>`<button class="tab ${i===cat?'on':''}" onclick="cat=${i};tabs();menu()">${c}</button>`).join('')}
-function menu(){
-  $('menu').innerHTML=M.map((m,i)=>m[0]!==cat?'':`<div class="card p-3 flex gap-3"><div class="thumb" id="t${i}"><img class="thumb" src="${IMG}${i+1}.jpg" alt="${m[1]}" loading="lazy" onerror="this.parentNode.textContent='${m[5]}'"></div>
-  <div class="flex-1 min-w-0"><div class="flex items-center gap-2"><span class="${m[4]?'veg':'nv'}" title="${m[4]?'Veg':'Non-Veg'}"></span><h3 class="font-semibold leading-tight">${m[1]}</h3></div>
-  <p class="text-xs text-stone-400 mt-1">${m[2]}</p><div class="mt-1 font-bold" style="color:var(--gold)">${rs(m[3])}</div>
-  <div class="mt-2 flex items-center gap-2"><div class="flex items-center obtn"><button class="w-9 h-9 text-xl" aria-label="Less" onclick="q(${i},-1)">−</button><span id="q${i}" class="w-6 text-center">${sel[i]||1}</span><button class="w-9 h-9 text-xl" aria-label="More" onclick="q(${i},1)">+</button></div>
-  <button class="gbtn px-4 h-9 text-sm" onclick="add(${i})">Add to Order</button></div></div></div>`).join('')}
-function q(i,d){sel[i]=Math.max(1,Math.min(20,(sel[i]||1)+d));$('q'+i).textContent=sel[i]}
-function add(i){cart[i]=(cart[i]||0)+(sel[i]||1);sel[i]=1;$('q'+i).textContent=1;bar()}
-function bar(){const n=cartCount();$('bar').innerHTML=n?`<div class="fixed bottom-0 inset-x-0 p-3 z-30" style="background:linear-gradient(transparent,#0e0b08 40%)"><div class="max-w-2xl mx-auto flex items-center gap-3"><div class="flex-1"><div class="text-xs text-stone-400">${n} item${n>1?'s':''}</div><div class="text-xl font-bold">${rs(cartTotal())}</div></div><button class="gbtn px-6 py-3 text-lg" onclick="review()">Review Order</button></div></div>`:''}
-function newCode(){const c='ACDEFGHJKMNPRTWXY34679';code=Array.from({length:5},()=>c[Math.floor(Math.random()*c.length)]).join('')}
-function review(){newCode();modalReview()}
-function modalReview(msg){
-  const rows=Object.entries(cart).map(([i,n])=>`<div class="flex justify-between py-1"><span>${M[i][1]} × ${n}</span><span>${rs(M[i][3]*n)}</span></div>`).join('');
-  $('modal').innerHTML=`<div class="fixed inset-0 z-40 bg-black/80 flex items-end sm:items-center justify-center"><div class="card pop w-full max-w-md p-5 max-h-[95vh] overflow-y-auto" style="border-radius:24px 24px 0 0">
-  <div class="flex justify-between items-center"><h2 class="serif text-2xl font-bold" style="color:var(--gold)">Review Order</h2><button class="text-3xl px-2" aria-label="Close" onclick="$('modal').innerHTML=''">×</button></div>
-  <div class="text-stone-400 text-sm mb-2">Table ${String(T).padStart(2,'0')}</div><div class="text-sm border-y border-stone-700 py-2">${rows}</div>
-  <div class="flex justify-between text-xl font-bold py-3"><span>Total</span><span>${rs(cartTotal())}</span></div>
-  <p class="text-center text-sm text-stone-300 mb-2">Type this code to confirm</p>
-  <div class="codebox" id="cb">${code}</div>
-  <input id="ci" class="codein mt-3" maxlength="5" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Type the 5-character code" oninput="chk(this)">
-  <div id="cm" class="text-center text-red-400 h-6 mt-1 text-sm">${msg||''}</div>
-  <div class="flex gap-3 mt-1"><button class="obtn flex-1 py-3" onclick="newCode();modalReview()">New Code</button><button class="gbtn flex-1 py-3 text-lg" onclick="chk($('ci'),1)">Confirm</button></div></div></div>`;
-  setTimeout(()=>$('ci')&&$('ci').focus(),50)}
-function chk(el,force){const v=el.value.toUpperCase();el.value=v;if(v.length<5&&!force)return;
-  if(v===code)return submit();
-  newCode();modalReview('Code did not match. Try the new code.');const c=$('cb');if(c){c.classList.add('shake')}}
-function submit(){
-  const ref=db.ref('orders/T'+T).push(),items=cartItems(),total=cartTotal(),backup={...cart};
-  const o={id:ref.key,table:T,items,total,status:'confirmed',paid:false,ts:firebase.database.ServerValue.TIMESTAMP};
-  cart={};bar(); // cart cleared immediately: reopening cannot resend it
-  ref.set(o).catch(()=>{cart=backup;bar();alert('Order could not be sent. Please try again.')});
-  chime(true);
-  $('modal').innerHTML=`<div class="fixed inset-0 z-40 bg-black/85 flex items-center justify-center p-5"><div class="card pop p-6 text-center max-w-sm w-full"><div class="text-5xl mb-2">✅</div><h2 class="serif text-3xl font-bold" style="color:var(--gold)">Aapka order confirm ho gaya hai!</h2><p class="mt-3">Table ${String(T).padStart(2,'0')}</p><p class="text-2xl font-bold mt-1">${rs(total)}</p><button class="gbtn w-full py-3 mt-5 text-lg" onclick="$('modal').innerHTML=''">View my order</button></div></div>`}
-function ordersPanel(){
-  const el=$('ord');if(!el)return;
-  const os=Object.values(D['T'+T]||{}).filter(o=>o&&o.id&&!o.paid).sort((a,b)=>(a.ts||0)-(b.ts||0));
-  if(!os.length){el.innerHTML='';return}
-  const sum=os.reduce((s,o)=>s+o.total,0);
-  el.innerHTML=`<div class="card p-4 mb-3"><h2 class="serif text-xl font-bold mb-2" style="color:var(--gold)">Your orders</h2>`+os.map(o=>{const si=STAT.indexOf(o.status);return `<div class="py-2 border-b border-stone-800"><div class="text-sm text-stone-300">#${o.id.slice(-4).toUpperCase()} · ${(o.items||[]).map(i=>i.n+' ×'+i.q).join(', ')}</div><div class="flex gap-1 my-2">${STAT.map((s,k)=>`<div class="step ${k<=si?'on':''}">${LBL[s]}</div>`).join('')}</div><div class="flex justify-between text-sm"><span class="text-stone-400">${o.status==='ready'?'Ready to serve':wait(o)}</span><b>${rs(o.total)}</b></div></div>`}).join('')+`<div class="flex justify-between text-xl font-bold pt-3"><span>Total bill</span><span>${rs(sum)}</span></div></div>`}
+/* Lock */
+function lockV(){
+  const dots=[0,1,2,3].map(i=>`<span class="w-4 h-4 rounded-full border border-yellow-600 ${i<S.pin.length?'bg-yellow-400':''}"></span>`).join("");
+  const keys=[1,2,3,4,5,6,7,8,9,"Clear",0,"⌫"].map(k=>`<button class="card key" onclick="pinKey('${k}')">${k}</button>`).join("");
+  return `<div class="max-w-xs mx-auto mt-6 card p-6 text-center">
+  <div class="serif text-2xl gtext mb-1">Staff Access</div><div class="text-sm text-stone-400 mb-4">Enter your 4-digit PIN</div>
+  <div class="flex justify-center gap-3 mb-5">${dots}</div>
+  <div class="text-red-400 text-sm h-5 mb-2">${S.pinErr||""}</div>
+  <div class="grid grid-cols-3 gap-3">${keys}</div></div>
+  <div class="text-center mt-6"><button class="ghost" onclick="S.demo=true;go('menu')">Open Demo Menu</button></div>`;
+}
+function pinKey(k){
+  S.pinErr="";
+  if(k==="Clear")S.pin="";else if(k==="⌫")S.pin=S.pin.slice(0,-1);else if(S.pin.length<4)S.pin+=k;
+  if(S.pin.length===4){const r=PINS[S.pin];if(r){S.pin="";return go(r)}S.pinErr="Incorrect PIN. Please try again.";S.pin=""}
+  render();
+}
 
-/* ===== Staff ===== */
-function gate(){
-  $('app').innerHTML=head(V==='kitchen'?'Kitchen Display':'Owner Counter')+`<div class="card p-6 mt-8 text-center"><p class="mb-3">Enter PIN</p><input id="pin" type="password" inputmode="numeric" maxlength="4" class="codein" style="letter-spacing:.5em" oninput="if(this.value.length===4)pin(this.value)"><div id="pe" class="text-red-400 h-6 mt-2 text-sm"></div></div>`;pill()}
-function pin(v){if(v===PINS[V]){authed=true;try{sessionStorage.setItem('auth_'+V,'1')}catch(e){}audio();staff()}else{$('pin').value='';$('pe').textContent='Wrong PIN'}}
-function tog(){soundOn=!soundOn;if(soundOn)chime(true);staff()}
-function setSt(t,id,s){db.ref(`orders/${t}/${id}/status`).set(s)}
-function pay(t){
-  const os=Object.values(D[t]||{}).filter(o=>o&&o.id&&!o.paid);
-  if(!os.length||!confirm(`Mark ${t.replace('T','Table ')} as paid (${rs(os.reduce((s,o)=>s+o.total,0))})?`))return;
-  const u={};os.forEach(o=>{u[`orders/${t}/${o.id}`]=null;u[`history/${o.id}`]={...o,paid:true,paidAt:firebase.database.ServerValue.TIMESTAMP}});
-  db.ref().update(u)}
-function staff(){
-  const os=all().filter(o=>!o.paid),k=V==='kitchen';
-  let body='';
-  if(k){body=os.length?[...os].sort((a,b)=>(a.status==='ready')-(b.status==='ready')||(a.ts||0)-(b.ts||0)).map(o=>`<div class="card p-4 ${o.status==='ready'?'opacity-50':''}"><div class="flex justify-between"><b class="text-xl">Table ${String(o.table).padStart(2,'0')}</b><span class="text-sm" style="color:var(--gold)">${LBL[o.status]}</span></div><ul class="my-2">${(o.items||[]).map(i=>`<li class="text-lg">${i.q} × ${i.n}</li>`).join('')}</ul>
-  <div class="flex gap-2">${o.status==='confirmed'?`<button class="gbtn flex-1 py-2" onclick="setSt('T${o.table}','${o.id}','preparing')">Preparing</button>`:''}${o.status!=='ready'?`<button class="gbtn flex-1 py-2" onclick="setSt('T${o.table}','${o.id}','ready')">Ready</button>`:''}</div></div>`).join(''):'<p class="text-center text-stone-400 mt-10">No active orders.</p>'}
-  else{const by={};os.forEach(o=>(by['T'+o.table]=by['T'+o.table]||[]).push(o));const ks=Object.keys(by).sort((a,b)=>a.slice(1)-b.slice(1));
-  body=`<div class="card p-4 flex justify-between"><span>Unpaid total</span><b class="text-xl">${rs(os.reduce((s,o)=>s+o.total,0))}</b></div>`+(ks.length?ks.map(t=>`<div class="card p-4"><div class="flex justify-between items-center"><b class="text-xl">Table ${t.slice(1).padStart(2,'0')}</b><b class="text-xl" style="color:var(--gold)">${rs(by[t].reduce((s,o)=>s+o.total,0))}</b></div>${by[t].map(o=>`<div class="text-sm text-stone-300 mt-1">#${o.id.slice(-4).toUpperCase()} · ${(o.items||[]).map(i=>i.n+' ×'+i.q).join(', ')} · ${LBL[o.status]} · ${rs(o.total)}</div>`).join('')}<button class="gbtn w-full py-3 mt-3" onclick="pay('${t}')">Mark Paid</button></div>`).join(''):'<p class="text-center text-stone-400 mt-10">No unpaid tables.</p>')}
-  $('app').innerHTML=head(k?'Kitchen Display':'Owner Counter')+`<div class="flex justify-end mb-3"><button class="obtn px-4 py-2 text-sm" onclick="tog()">Sound: ${soundOn?'On':'Off'}</button></div><div class="space-y-3">${body}</div>`}
+/* Customer menu */
+function menuV(){
+  const sel=S.locked?"":`<select class="bg-black border border-yellow-700 rounded-lg p-1 ml-2" onchange="S.table=+this.value;S.cart={};render()">${Array.from({length:10},(_,i)=>`<option value="${i+1}" ${S.table==i+1?"selected":""}>${T(i+1)}</option>`).join("")}</select>`;
+  const mine=unpaid(S.table);
+  const status=mine.length?`<div class="card p-4 mb-4"><div class="flex justify-between items-center mb-2"><div class="serif text-xl gtext">Your Table Status</div><div class="text-right"><div class="text-xs text-stone-400">Current Unpaid Bill</div><div class="text-xl font-semibold">${R(total(mine))}</div></div></div>
+  ${mine.map(o=>`<div class="border-t border-yellow-900/50 py-2 text-sm"><div class="flex justify-between"><span>Order ${o.code} · ${tm(o.ts||Date.now())}</span><span class="badge b-${o.status}">${o.status}</span></div><div class="text-stone-400">${items(o).map(i=>`${i.qty}× ${i.name}`).join(", ")}</div><div class="text-yellow-200/80">${prog(o)}</div></div>`).join("")}</div>`
+  :`<div class="card p-3 mb-4 text-sm text-stone-300 flex justify-between"><span>No active orders for this table.</span><span>Bill: ${R(0)}</span></div>`;
+  const tabs=CATS.map(c=>`<button class="ghost whitespace-nowrap ${S.cat===c?'on':''}" onclick="S.cat='${c.replace("'","\\'")}';render()">${c}</button>`).join("");
+  const list=MENU.filter(m=>m.cat===S.cat).map(m=>{const n=S.cart[m.id]||0;return `<div class="card p-3 flex gap-3 items-center">
+  <div class="tile w-20 h-20 rounded-xl flex items-center justify-center text-4xl shrink-0 overflow-hidden">${m.img?`<img src="${m.img}" alt="${m.name}" class="w-full h-full object-cover" onerror="this.replaceWith(document.createTextNode('${m.e}'))">`:m.e}</div>
+  <div class="flex-1 min-w-0"><div class="font-semibold">${m.name}</div><div class="text-xs text-stone-400 leading-snug">${m.desc}</div><div class="text-yellow-300 mt-1">${R(m.price)}</div></div>
+  ${n?`<div class="flex items-center gap-2"><button class="ghost px-3" onclick="chg(${m.id},-1)" aria-label="Remove one">−</button><b>${n}</b><button class="ghost px-3" onclick="chg(${m.id},1)" aria-label="Add one">+</button></div>`:`<button class="btn" onclick="chg(${m.id},1)">Add</button>`}</div>`}).join("");
+  return `<div class="mb-3 text-lg">Welcome to <span class="serif gtext text-2xl font-bold">Table ${T(S.table)}</span>${sel}</div>${status}
+  <div class="flex gap-2 overflow-x-auto pb-3 mb-2">${tabs}</div><div class="grid md:grid-cols-2 gap-3">${list}</div><div id="cartbar"></div>`;
+}
+function chg(id,d){const n=(S.cart[id]||0)+d;if(n<=0)delete S.cart[id];else S.cart[id]=n;render();if(S.cartOpen)openCart()}
+const cartLines=()=>Object.entries(S.cart).map(([id,n])=>({...MENU.find(m=>m.id==id),qty:n}));
+const cartTotal=()=>cartLines().reduce((s,l)=>s+l.qty*l.price,0);
+function cartBar(){
+  const n=Object.values(S.cart).reduce((a,b)=>a+b,0);
+  $("cartbar").innerHTML=n?`<div class="fixed bottom-0 inset-x-0 p-3 z-30" style="background:linear-gradient(transparent,#0b0a09 40%)"><button class="btn w-full max-w-xl mx-auto block" onclick="openCart()">View Cart · ${n} item${n>1?"s":""} · ${R(cartTotal())}</button></div>`:"";
+}
+function openCart(){
+  S.cartOpen=true;const L=cartLines();
+  if(!L.length){closeModal();return}
+  $("modal").innerHTML=`<div class="fixed inset-0 z-40 bg-black/70 flex items-end md:items-center justify-center" onclick="if(event.target===this)closeModal()">
+  <div class="card w-full max-w-lg p-5 max-h-[90vh] overflow-y-auto"><div class="serif text-2xl gtext mb-3">Your Cart · ${T(S.table)}</div>
+  ${L.map(l=>`<div class="flex items-center justify-between py-2 border-b border-yellow-900/40"><div class="flex-1"><div>${l.name}</div><div class="text-xs text-stone-400">${R(l.price)} each</div></div>
+  <div class="flex items-center gap-2"><button class="ghost px-3" onclick="chg(${l.id},-1)">−</button><b>${l.qty}</b><button class="ghost px-3" onclick="chg(${l.id},1)">+</button></div><div class="w-20 text-right">${R(l.qty*l.price)}</div></div>`).join("")}
+  <div class="flex justify-between text-lg my-4"><span>Subtotal</span><b>${R(cartTotal())}</b></div>
+  <div class="flex gap-2"><button class="ghost flex-1" onclick="closeModal()">Keep Browsing</button><button class="btn flex-1" onclick="startConfirm()">Review & Confirm</button></div></div></div>`;
+}
+function closeModal(){S.cartOpen=false;$("modal").innerHTML=""}
+const CH="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+function startConfirm(){
+  const code=Array.from({length:5},()=>CH[Math.floor(Math.random()*CH.length)]).join("");S.code=code;
+  $("modal").innerHTML=`<div class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"><div class="card w-full max-w-md p-6 text-center">
+  <div class="serif text-2xl gtext mb-1">Confirm Your Order</div><div class="text-sm text-stone-300 mb-3">Type this code below to confirm. This prevents accidental orders.</div>
+  <div class="text-5xl font-bold tracking-[.35em] pl-[.35em] py-4 my-2 rounded-xl bg-black border border-yellow-600 text-yellow-200">${code}</div>
+  <input id="cin" maxlength="5" autocomplete="off" autocapitalize="characters" class="w-full text-center text-3xl tracking-[.3em] bg-black border border-yellow-700 rounded-xl p-3 my-3 uppercase" placeholder="Enter code" oninput="document.getElementById('cok').disabled=this.value.toUpperCase()!==S.code">
+  <div class="text-sm text-stone-400 mb-3">Total: ${R(cartTotal())}</div>
+  <div class="flex gap-2"><button class="ghost flex-1" onclick="openCart()">Back</button><button id="cok" disabled class="btn flex-1" onclick="placeOrder()">Place Order</button></div></div></div>`;
+  setTimeout(()=>$("cin")&&$("cin").focus(),50);
+}
+function placeOrder(){
+  const L=cartLines();if(!L.length)return;
+  const o={table:S.table,code:S.code,ts:firebase.database.ServerValue.TIMESTAMP,status:"Received",paid:false,total:cartTotal(),
+    items:L.map(l=>({name:l.name,qty:l.qty,price:l.price,delivered:false}))};
+  $("cok").disabled=true;
+  db.ref("orders").push(o).then(()=>{S.cart={};closeModal();render();alert("Order placed successfully. Your order code is "+S.code+".")}).catch(e=>{$("cok").disabled=false;fail(e)});
+}
 
-init();
+/* Owner */
+function orderCard(o,edit){
+  return `<div class="border-t border-yellow-900/40 pt-2 mt-2 text-sm"><div class="flex justify-between items-center"><span>${T(o.table)} · ${o.code} · ${tm(o.ts||Date.now())}</span><span class="badge b-${o.status}">${o.status}</span></div>
+  ${items(o).map((i,k)=>`<label class="flex items-center gap-2 py-1 ${edit?'cursor-pointer':''}"><input type="checkbox" class="accent-yellow-500 w-4 h-4" ${i.delivered?"checked":""} ${edit&&!o.paid?"":"disabled"} onchange="deliver('${o.id}',${k},this.checked)"><span class="${i.delivered?'line-through text-stone-500':''}">${i.qty}× ${i.name}</span><span class="ml-auto text-stone-400">${R(i.qty*i.price)}</span></label>`).join("")}
+  <div class="text-yellow-200/80">${prog(o)}${o.paid?" · Paid":""}</div></div>`;
+}
+function deliver(id,k,v){db.ref(`orders/${id}/items/${k}/delivered`).set(v).catch(fail)}
+function pay(n){
+  const l=unpaid(n);if(!l.length)return;
+  if(!confirm(`Confirm payment received for ${T(n)}: ${R(total(l))}?`))return;
+  const u={};l.forEach(o=>{u[o.id+"/paid"]=true;u[o.id+"/paidAt"]=Date.now()});
+  db.ref("orders").update(u).catch(fail);
+}
+function ownerV(){
+  const tabs=[["active","Active / Unpaid"],["paid","Paid History"],["all","All Orders"]].map(([k,l])=>`<button class="ghost ${S.tab===k?'on':''}" onclick="S.tab='${k}';render()">${l}</button>`).join("");
+  let body="";
+  if(S.tab==="active"){
+    body=`<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">`+Array.from({length:10},(_,i)=>{const n=i+1,l=unpaid(n);
+      return `<div class="card p-4"><div class="flex justify-between items-center"><div class="serif text-2xl gtext">${T(n)}</div><div class="text-right"><div class="text-xs text-stone-400">Unpaid Bill</div><div class="text-xl font-semibold">${R(total(l))}</div></div></div>
+      ${l.length?l.map(o=>orderCard(o,true)).join(""):`<div class="text-stone-500 text-sm mt-3">Vacant · no active orders</div>`}
+      <button class="btn w-full mt-4" ${l.length?"":"disabled"} onclick="pay(${n})">Payment Received</button></div>`}).join("")+`</div>`;
+  }else{
+    const l=[...S.orders].filter(o=>S.tab==="all"||o.paid).reverse();
+    body=l.length?`<div class="grid md:grid-cols-2 gap-3">${l.map(o=>`<div class="card p-4">${orderCard(o,false)}<div class="text-right mt-2">Total: <b>${R(o.total)}</b></div></div>`).join("")}</div>`:`<div class="text-stone-400">No orders to show yet.</div>`;
+  }
+  return `<div class="flex flex-wrap gap-2 mb-4">${tabs}</div>${body}`;
+}
+
+/* Kitchen */
+function setStatus(id,s){db.ref(`orders/${id}/status`).set(s).catch(fail)}
+function kitchenV(){
+  const act=S.orders.filter(o=>!o.paid&&o.status!=="Ready"),rdy=S.orders.filter(o=>!o.paid&&o.status==="Ready");
+  const card=(o,k)=>`<div class="card p-4"><div class="flex justify-between items-start"><div><span class="text-stone-400 text-sm">#${k+1} in queue</span><div class="serif text-3xl gtext">${T(o.table)}</div></div><div class="text-right text-sm"><div>Order ${o.code}</div><div class="text-stone-400">${tm(o.ts||Date.now())}</div><span class="badge b-${o.status}">${o.status}</span></div></div>
+  <ul class="my-3 space-y-1">${items(o).map(i=>`<li class="flex gap-3 text-lg"><b class="text-yellow-300 w-8">${i.qty}×</b>${i.name}</li>`).join("")}</ul>
+  <div class="flex gap-2"><button class="btn flex-1" ${o.status==="Preparing"?"disabled":""} onclick="setStatus('${o.id}','Preparing')">Preparing</button><button class="btn flex-1" onclick="setStatus('${o.id}','Ready')">Ready</button></div></div>`;
+  return `<div class="text-stone-400 text-sm mb-3">Oldest orders appear first. ${act.length} in queue · ${rdy.length} ready for service.</div>
+  ${act.length?`<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">${act.map(card).join("")}</div>`:`<div class="card p-6 text-center text-stone-300">The queue is clear. New orders will appear here instantly.</div>`}
+  ${rdy.length?`<div class="serif text-xl gtext mt-6 mb-2">Ready for Service</div><div class="flex flex-wrap gap-2">${rdy.map(o=>`<span class="badge b-Ready">${T(o.table)} · ${o.code}</span>`).join("")}</div>`:""}`;
+}
+render();
 </script>
 </body>
 </html>
